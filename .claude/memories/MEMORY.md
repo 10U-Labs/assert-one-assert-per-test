@@ -1,0 +1,41 @@
+# Memories
+
+- [Memories live in .claude/memories](memories-live-in-dot-claude-memories.md) — autoMemoryDirectory in the untracked settings.local.json points here; there is no CLAUDE.md.
+- [A memory holds only what the tree cannot say](a-memory-holds-only-what-the-tree-cannot-say.md) — the reason, never the history; nothing release.yml, README.md, the code or git log answers; this index is the one exception.
+- [The user's words are restated, never copied](the-users-words-are-restated-never-copied.md) — in memories, issues, commits, tasks, feedback drafts and summaries; names stay as given.
+- [Commits go straight to main](commits-go-straight-to-main.md) — no branch, no pull request; CI is the only review.
+- [A requested change ends at the push](a-requested-change-ends-at-the-push.md) — any change the user asks for, an issue's fix or not, is committed and pushed without asking or waiting to be told.
+- [A path is staged by name](a-path-is-staged-by-name.md) — never `git add -A` or `git add .`; the lock file is ignored only in this clone.
+- [git add stages nothing when one path is missing](git-add-stages-nothing-when-one-path-is-missing.md) — a removal goes to `git rm`, never on the `git add` line.
+- [The index is read back before committing](the-index-is-read-back-before-committing.md) — one `git status --porcelain` between staging and committing.
+- [Issues that share code are one piece of work](issues-that-share-code-are-one-piece-of-work.md) — group the issues whose fixes go through the same code, take the first group whole, push each part once it stands alone.
+- [An issue is closed by its commit](an-issue-is-closed-by-its-commit.md) — one `Closes #N` line per issue; `Closes #1 and #2` leaves #2 open.
+- [Issue-closing keywords fire on push](issue-closing-keywords-fire-on-push.md) — nine keywords close from anywhere in a pushed message, brackets included; keep them for the finishing commit.
+- [The form of an issue reference](closing-keyword-form.md) — `Closes #N` to close, `Refs #N` or `See #N` to mention, one line per issue.
+- [A push can leave its issues open](a-push-can-leave-its-issues-open.md) — once the runs are clean, read back each issue the message closes and close any still open.
+- [A revert leaves its issue closed](a-revert-leaves-its-issue-closed.md) — reopen it by hand with `gh issue reopen` and read its state back.
+- [Push once and let the run finish](push-once-and-let-the-run-finish.md) — a second push cancels the first run and costs that commit its release.
+- [Unpushed commits go out first](unpushed-commits-go-out-first.md) — oldest first, one commit per push, before any new work starts.
+- [A rejected push is fixed forward](a-rejected-push-is-fixed-forward.md) — one follow-up commit answering every failed check, never an amend and force-push.
+- [A red run is fixed by the session that pushed](a-red-run-is-fixed-by-the-session-that-pushed.md) — caused or inherited, in a push of its own before the next piece of work.
+- [CI is the source of truth](ci-is-the-source-of-truth.md) — never run tests, linters or builds locally; a green release run publishes.
+- [CI shows all output](ci-shows-all-output.md) — every step prints everything its tools say, passing or failing: no quiet or count flags, no /dev/null, captured output printed too.
+- [gh search returns at most 1000 issues](gh-search-returns-at-most-1000-issues.md) — `--search` and `--label` go through search; list every open issue with `--limit 10000` and filter labels in `--jq`.
+- [Find a run by the full hash](find-a-run-by-the-full-hash.md) — `gh run list --commit` lists nothing for a short hash; pass `git rev-parse HEAD`.
+- [A wait runs in the background](a-wait-runs-in-the-background.md) — a CI wait is run_in_background or Monitor, never a foreground sleep or gh run watch, so reminders fire; a watch polls at --interval 60.
+- [Only wait while a run is in progress](only-wait-while-a-run-is-in-progress.md) — no diagnosis, edits or commits until it lands, autopilot or not.
+- [One indivisible problem per issue](one-indivisible-problem-per-issue.md) — one fault with every case of it listed, or one defect with one fix; two problems are split, cases of one fault merged.
+- [An issue states one solution](an-issue-states-one-solution.md) — an issue names one change and its reason, never a menu, a question or the options that lost.
+- [Issues have no fixed form](issues-have-no-fixed-form.md) — no house layout; write each so a fresh session can act on it alone.
+- [Issue sections take headings](issue-sections-take-headings.md) — a `##` heading opens each section, never a bolded lead sentence.
+- [Issues define their terms](issues-define-their-terms.md) — say what each file, term and cited source is and why it is there; never a name the reader must already know.
+- [Guarding an issue body rewrite](guarding-an-issue-body-rewrite.md) — chain each command with `&&` and never write back an empty file; a wiped body comes back through GraphQL `userContentEdits`.
+- [Comments from other accounts are ignored](comments-from-other-accounts-are-ignored.md) — only `jdrowne`, the user and Claude posting as them, counts on an issue; anyone else's comment never holds work, raises a decision or gets a reply.
+- [A paragraph wraps at eighty columns](a-paragraph-wraps-at-eighty-columns.md) — in every .md file; headings, tables, fences, frontmatter and index entries keep their width.
+- [Working without subagents](working-without-subagents.md) — no Agent or Workflow call, whatever the work's size; denied in the tracked settings.json, lifted only by the user's own ask.
+- [Every language is read by its own parser](every-language-is-read-by-its-own-parser.md) — a grammar and a module per language, never a text match; a file that will not parse exits 2; read before adding one.
+- [Test first](test-first.md) — the test before the code; CI observes red and green.
+- [Cover every tier the change touches](cover-every-tier-the-change-touches.md) — unit, integration, e2e; unit and integration each gate on full branch coverage.
+- [A sample is a file, not a literal](a-sample-is-a-file-not-a-literal.md) — source text is a file under the tier's samples/ with the ending of the file it stands for, loaded with sample(); every checker leaves the samples out.
+- [Anything importable lives outside conftest](anything-importable-lives-outside-conftest.md) — shared code is lib/test_read_sample, lib/test_trees and lib/test_fixture_types, reached through PYTHONPATH=lib.
+- [A conftest with no fixture in it stays](a-conftest-with-no-fixture-in-it-stays.md) — the integration and e2e conftest.py are zero bytes and stay.

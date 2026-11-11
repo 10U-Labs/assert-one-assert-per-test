@@ -1,0 +1,78 @@
+from __future__ import annotations
+
+import io
+import subprocess
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
+from typing import TYPE_CHECKING
+
+import pytest
+from test_read_sample import read_sample
+
+from assert_one_assert_per_test.cli import main
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator
+
+
+@pytest.fixture
+def run_cli() -> Callable[[list[str]], tuple[int, str, str]]:
+    def runner(args: list[str]) -> tuple[int, str, str]:
+        stdout = io.StringIO()
+        stderr = io.StringIO()
+        exit_code = 0
+        with redirect_stdout(stdout), redirect_stderr(stderr):
+            try:
+                main(args)
+            except SystemExit as exit_request:
+                exit_code = int(exit_request.code) if exit_request.code is not None else 0
+        return exit_code, stdout.getvalue(), stderr.getvalue()
+
+    return runner
+
+
+@pytest.fixture
+def run_cli_subprocess() -> Callable[[list[str]], tuple[int, str, str]]:
+    def runner(args: list[str]) -> tuple[int, str, str]:
+        result = subprocess.run(
+            ["assert-one-assert-per-test", *args],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return result.returncode, result.stdout, result.stderr
+
+    return runner
+
+
+@pytest.fixture
+def write_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest
+) -> Callable[[dict[str, str]], Path]:
+    def builder(files: dict[str, str]) -> Path:
+        for relative, name in files.items():
+            path = tmp_path / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(read_sample(request.path.parent, name), encoding="utf-8")
+        monkeypatch.chdir(tmp_path)
+        return tmp_path
+
+    return builder
+
+
+@pytest.fixture
+def unreadable_file(tmp_path: Path) -> Iterator[Path]:
+    path = tmp_path / "unreadable.rs"
+    path.write_bytes(b"")
+    path.chmod(0o000)
+    try:
+        yield path
+    finally:
+        path.chmod(0o644)
+
+
+@pytest.fixture
+def broken_symlink(tmp_path: Path) -> Path:
+    link = tmp_path / "dangling.rs"
+    link.symlink_to(tmp_path / "missing_target.rs")
+    return link

@@ -1,0 +1,13 @@
+{
+  "autoMemoryEnabled": true,
+  "permissions": {
+    "deny": [
+      "Agent",
+      "Workflow"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "\"$(git rev-parse --show-toplevel)\"/.claude/statusline.sh"
+  }
+}

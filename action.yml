@@ -1,0 +1,53 @@
+---
+description: Assert each test function contains exactly one assertion
+inputs:
+  count:
+    default: "false"
+    description: Print only how many findings there were
+    required: false
+  exclude:
+    description: Glob patterns to exclude files (comma-separated)
+    required: false
+  fail-fast:
+    default: "false"
+    description: Exit on first finding
+    required: false
+  files:
+    description: Target files, directories or globs to check (space-separated)
+    required: true
+  quiet:
+    default: "false"
+    description: Suppress output, exit code only
+    required: false
+  verbose:
+    default: "false"
+    description: Show files scanned/skipped, findings, and summary
+    required: false
+  warn-only:
+    default: "false"
+    description: Always exit 0, report only
+    required: false
+name: Assert One Assert Per Test
+runs:
+  steps:
+    - run: python3 -m pip install assert-one-assert-per-test
+      shell: bash
+    - run: |
+        ARGS=""
+        [ "${{ inputs.quiet }}" = "true" ] && ARGS="$ARGS --quiet"
+        [ "${{ inputs.count }}" = "true" ] && ARGS="$ARGS --count"
+        [ "${{ inputs.verbose }}" = "true" ] && ARGS="$ARGS --verbose"
+        [ "${{ inputs.fail-fast }}" = "true" ] && ARGS="$ARGS --fail-fast"
+        [ "${{ inputs.warn-only }}" = "true" ] && ARGS="$ARGS --warn-only"
+        if [ -n "${{ inputs.exclude }}" ]; then
+          ARGS="$ARGS --exclude '${{ inputs.exclude }}'"
+        fi
+        set -f
+        FILES=""
+        for pattern in ${{ inputs.files }}; do
+          FILES="$FILES '$pattern'"
+        done
+        set +f
+        eval "assert-one-assert-per-test $ARGS $FILES"
+      shell: bash
+  using: composite
